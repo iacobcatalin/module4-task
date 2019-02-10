@@ -1,0 +1,22 @@
+.parent-div div{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: red;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.parent-div{
+    background: yellow;
+    display: inline-block;
+    width: 250px;
+    font-size: 0;
+}
+
+div.black {
+    background: black;
+}
+
+div.white {
+    background: white;
+}
