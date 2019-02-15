@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", start);
 
-var menuItem;
+var selectedItem;
 var difX;
 var difY;
 var body;
@@ -13,9 +13,9 @@ var parentDiv;
 var n = 5;
 var sideWidth = 50;
 var elementSpace = 5;
+var items;
 
 function start() {
-    createDivElements();
     menuItem = document.getElementsByClassName("menuItem")[0];
     body = document.body;
     body.addEventListener("mouseleave", pageLeave);
@@ -36,8 +36,12 @@ function createDivElements() {
 }
 
 function addEventListeners() {
-    menuItem.addEventListener("mousedown", menuItemMouseDown);
-
+    var menuItem;
+    items = document.getElementsByClassName("menuItem");
+    for (var i = 0; i < items.length; i++) {
+        menuItem = items[i];
+        menuItem.addEventListener("mousedown", menuItemMouseDown);
+    }
 }
 function menuItemMouseDown(e) {
     timeout = setTimeout(() => {
@@ -46,25 +50,66 @@ function menuItemMouseDown(e) {
     }, 10);
 
     body.addEventListener("mouseup", menuItemUpMove);
-    difX = e.clientX - menuItem.offsetLeft;
-    difY = e.clientY - menuItem.offsetTop;
+    selectedItem = e.target;
+    difX = e.clientX - e.target.offsetLeft;
+    difY = e.clientY - e.target.offsetTop;
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+
 }
 
 function menuItemMouseMove(e) {
-    console.log(e.clientX, e.clientY);
+    // console.log(e.clientX, e.clientY);
     mouseX = e.clientX;
     mouseY = e.clientY;
 }
 
 function update(e) {
-    menuItem.style.top = (mouseY - difY) + "px";
-    menuItem.style.left = (mouseX - difX) + "px";
+    selectedItem.style.top = (mouseY - difY) + "px";
+    selectedItem.style.left = (mouseX - difX) + "px";
+
+    var r1 = {
+        x: selectedItem.offsetLeft,
+        y: selectedItem.offsetTop,
+        w: selectedItem.offsetWidth,
+        h: selectedItem.offsetHeight
+    };
+    var r2;
+    var hit = false;
+    for (var i = 0; i < items.length; i++) {
+        if (items[i] == selectedItem) {
+            continue;
+        }
+        menuItem = items[i];
+        r2 = {
+            x: menuItem.offsetLeft,
+            y: menuItem.offsetTop,
+            w: menuItem.offsetWidth,
+            h: menuItem.offsetHeight
+        };
+        if (r1.x + r1.w < r2.x || r1.x > r2.x + r2.w || r1.y + r1.h < r2.y || r1.y > r2.y + r2.h) {
+            menuItem.style.background = "red";
+        }
+        else {
+            hit = true;
+            menuItem.style.background = "yellow";
+        }
+    }
+    if (hit) {
+        selectedItem.style.background = "yellow";
+    }
+    else {
+        selectedItem.style.background = "red";
+    }
+
+
     animationFrame = requestAnimationFrame(update);
 }
 function menuItemUpMove(e) {
     clearTimeout(timeout);
-    menuItem.style.top = (e.clientY - difY) + "px";
-    menuItem.style.left = (e.clientX - difX) + "px";
+    selectedItem.style.top = (e.clientY - difY) + "px";
+    selectedItem.style.left = (e.clientX - difX) + "px";
     body.removeEventListener("mousemove", menuItemMouseMove);
     body.removeEventListener("mouseup", menuItemUpMove);
 }
@@ -73,3 +118,10 @@ function pageLeave() {
     body.removeEventListener("mousemove", menuItemMouseMove);
     body.removeEventListener("mouseup", menuItemUpMove);
 }
+
+// border radious 50 %
+// coliziune cercuri -  t
+
+
+// sqrt ((x2 -x1)^2 +  (y2 -y1)^2 ) = dist
+// dist < r1+r2
