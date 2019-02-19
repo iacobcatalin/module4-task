@@ -28,6 +28,7 @@ function createDivElements() {
         div.style.width = sideWidth + "px";
         div.style.height = sideWidth + "px";
         div.style.background = "red";
+        div.style.borderRadius = "50%";
         div.style.display = "inline-block";
         div.style.marginRight = elementSpace + "px";
         div.className = "menuItem";
@@ -76,6 +77,7 @@ function update(e) {
         h: selectedItem.offsetHeight
     };
     var r2;
+    var dist;
     var hit = false;
     for (var i = 0; i < items.length; i++) {
         if (items[i] == selectedItem) {
@@ -88,7 +90,10 @@ function update(e) {
             w: menuItem.offsetWidth,
             h: menuItem.offsetHeight
         };
-        if (r1.x + r1.w < r2.x || r1.x > r2.x + r2.w || r1.y + r1.h < r2.y || r1.y > r2.y + r2.h) {
+        dist = (r2.x - r1.x) * (r2.x - r1.x) + (r2.y - r1.y) * (r2.y - r1.y);
+        var d = Math.sqrt(dist);
+        // if (r1.x + r1.w < r2.x || r1.x > r2.x + r2.w || r1.y + r1.h < r2.y || r1.y > r2.y + r2.h) { // coliziune patrate
+        if (d > (r1.w / 2) + (r2.w / 2)) {
             menuItem.style.background = "red";
         }
         else {
@@ -118,10 +123,3 @@ function pageLeave() {
     body.removeEventListener("mousemove", menuItemMouseMove);
     body.removeEventListener("mouseup", menuItemUpMove);
 }
-
-// border radious 50 %
-// coliziune cercuri -  t
-
-
-// sqrt ((x2 -x1)^2 +  (y2 -y1)^2 ) = dist
-// dist < r1+r2
