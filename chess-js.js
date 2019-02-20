@@ -10,12 +10,13 @@ var mouseX;
 var mouseY;
 var animationFrame;
 var parentDiv;
-var n = 5;
+var n = 15;
 var sideWidth = 50;
 var elementSpace = 5;
 var items;
 
 function start() {
+    createDivElements();
     menuItem = document.getElementsByClassName("menuItem")[0];
     body = document.body;
     body.addEventListener("mouseleave", pageLeave);
